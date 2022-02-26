@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Gamedev Canvas Workshop - lesson 5: game over</title>
+    <title>Gamedev Canvas Workshop - lesson 4: paddle and keyboard controls</title>
     <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
 </head>
 <body>
@@ -10,23 +10,23 @@
 <canvas id="myCanvas" width="480" height="320"></canvas>
 
 <script>
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    var ballRadius = 10;
-    var x = canvas.width/2;
-    var y = canvas.height-30;
-    var dx = 2;
+    var canvas = document.getElementById("myCanvas");    //캔버스 변수
+    var ctx = canvas.getContext("2d");                  //2d 캔버스를 ctx변수에 저장
+    var ballRadius = 10;                                //공의 반지름
+    var x = canvas.width/2;                             //공의 위치 x
+    var y = canvas.height-30;                           //공의 위치 y
+    var dx = 2;                                         //공의 스피드
     var dy = -2;
-    var paddleHeight = 10;
-    var paddleWidth = 75;
-    var paddleX = (canvas.width-paddleWidth)/2;
-    var rightPressed = false;
-    var leftPressed = false;
+    var paddleHeight = 10;                              //패드 세로길이
+    var paddleWidth = 75;                               //패드 가로길이
+    var paddleX = (canvas.width-paddleWidth)/2;         //패드 위치
+    var rightPressed = false;                           //오른쪽 방향키 누름 여부
+    var leftPressed = false;                            //왼쪽 방향키 누름 여부
 
-    document.addEventListener("keydown", keyDownHandler, false);
-    document.addEventListener("keyup", keyUpHandler, false);
+    document.addEventListener("keydown", keyDownHandler, false);    //키를 누를 때 (조건,실행함수)
+    document.addEventListener("keyup", keyUpHandler, false);        //키를 뗄 때
 
-    function keyDownHandler(e) {
+    function keyDownHandler(e) {                    
         if(e.code  == "ArrowRight") {
             rightPressed = true;
         }
@@ -63,22 +63,22 @@
         drawBall();
         drawPaddle();
 
-        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) { //공이 양옆 벽에 닿으면 이동방향을 반대로 바꿈
             dx = -dx;
         }
-        if(y + dy < ballRadius) {
+        if(y + dy < ballRadius) {			//굥이 천장에 닿으면 방향을 바꿈
             dy = -dy;
         }
-        else if(y + dy > canvas.height-ballRadius) {
-            if(x > paddleX && x < paddleX + paddleWidth) {
-                dy = -dy;
-            }
-            else {
-                clearInterval(game);
-                alert("GAME OVER");
-                document.location.reload();
-            }
-        }
+		else if(y + dy > canvas.height-ballRadius){			//공이 바닥에 닿을 때
+			if(x > paddleX && x < paddleX + paddleWidth) {		//공이 패드 사이에 있으면 튕겨냄
+				dy = -dy;
+			}
+			else{                               //패드사이에 공이 없을 경우 게임오버
+				alert("Game Over");
+				document.location.reload();
+				clearInterval(interval);
+			}
+		}
 
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
             paddleX += 7;
@@ -91,8 +91,9 @@
         y += dy;
     }
 
-    var game = setInterval(draw, 10);
+    var interval = setInterval(draw, 10);
 </script>
 
 </body>
 </html>
+
